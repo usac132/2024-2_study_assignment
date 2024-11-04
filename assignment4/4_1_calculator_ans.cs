@@ -1,5 +1,4 @@
 using System;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace calculator
 {
@@ -64,7 +63,9 @@ namespace calculator
                 case "*": 
                     this.res = num1 * num2;
                     break ; 
-                case "/": 
+                case "/":
+                    if (num2 == 0)
+                        throw new DivideByZeroException("Divisor cannot be zero");
                     this.res = num1 / num2;
                     break ;
                 case "%":

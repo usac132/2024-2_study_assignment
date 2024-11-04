@@ -29,7 +29,7 @@ namespace statistics
             double English_Min = double.Parse(data[1, 4]);
             double[] TotalScore = new double[stdCount];
             double[] idx = new double[stdCount];
-            Dictionary<int, string> sequence = new Dictionary<int, string>();
+            string[] sequence = new string[5];
             sequence[0] = "1st";
             sequence[1] = "2nd";
             sequence[2] = "3rd";
@@ -53,7 +53,7 @@ namespace statistics
                 TotalScore[i - 1] = double.Parse(data[i, 2]) + double.Parse(data[i, 3]) + double.Parse(data[i, 4]);
                 idx[i - 1] = i - 1; ;
             }
-            Array.Sort(idx, (a, b) => TotalScore[(int)a].CompareTo(TotalScore[(int)b]));
+            Array.Sort(idx, (a, b) => TotalScore[(int)b].CompareTo(TotalScore[(int)a]));
 
 
             Console.WriteLine("Average Scores:");
@@ -89,10 +89,10 @@ Science: (95, 76)
 English: (92, 78)
 
 Students rank by total scores:
-Alice: 4th
-Bob: 1st
-Charlie: 5th
-David: 2nd
+Alice: 2nd
+Bob: 5th
+Charlie: 1st
+David: 4th
 Eve: 3rd
 
 */
