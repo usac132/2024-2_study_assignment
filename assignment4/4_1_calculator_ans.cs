@@ -1,4 +1,5 @@
 using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace calculator
 {
@@ -50,8 +51,71 @@ namespace calculator
     public class Calculator
     {
         // ---------- TODO ----------
-        
+        public double Calculate(double num1, string op, double num2)
+        {
+            switch (op)
+            {
+                case "+":
+                    this.res = num1 + num2;
+                    break;
+                case "-": 
+                    this.res = num1 - num2;
+                    break ; 
+                case "*": 
+                    this.res = num1 * num2;
+                    break ; 
+                case "/": 
+                    this.res = num1 / num2;
+                    break ;
+                case "%":
+                    this.res = num1 % num2;
+                    break;
+                case "**": 
+                    this.res = Math.Pow(num1, num2);
+                    break ; 
+                case "G": 
+                    this.res = GCD_calculator.GCD(num1, num2);
+                    break ;
+                case "L":
+                    this.res = LCM_calculator.LCM(num1, num2);
+                    break ;
+                default: throw new FormatException("Operator is not valid");
+            }
+
+            return res;
+        }
+
+        double res;
         // --------------------
+    }
+
+    public class GCD_calculator
+    {
+        public static double GCD(double num1, double num2)
+        {
+            if (!(int_verify.is_int(num1) && int_verify.is_int(num2)))
+                throw new FormatException("Input must be in the format: integer G integer");
+            if (num2 == 0) return num1;
+            else return GCD_calculator.GCD(num2, num1%num2);
+        }
+    }
+    public class LCM_calculator
+    {
+        public static double LCM(double num1, double num2)
+        {
+            if (!(int_verify.is_int(num1) && int_verify.is_int(num2)))
+                throw new FormatException("Input must be in the format: integer L integer");
+            return (num1 * num2) / GCD_calculator.GCD(num1, num2);
+        }
+    }
+
+    public class int_verify
+    {
+        public static bool is_int(double num)
+        {
+            if (num % 1 == 0) return true;
+            else return false;
+        }
     }
 }
 
