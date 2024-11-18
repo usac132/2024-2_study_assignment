@@ -38,8 +38,7 @@ public class GameManager : MonoBehaviour
     {
         // CamObj는 Character의 x, y position을 따라간다.
         // ---------- TODO ---------- 
-        Vector3 Character_position = new Vector3(Character.transform.position.x, Character.transform.position.y, CamObj.transform.position.z);
-        if (Character != null) CamObj.transform.position = Character_position;
+        if (Character != null) CamObj.transform.position = new Vector3(Character.transform.position.x, Character.transform.position.y, CamObj.transform.position.z);
         else return;
         // -------------------- 
     }
@@ -58,10 +57,8 @@ public class GameManager : MonoBehaviour
         // Character를 삭제하고, "Game Over!"라는 메시지를 3초간 띄우고, RestartButton을 활성화한다.
         // ---------- TODO ---------- 
         Destroy(Character);
-        GameObject.Find("MessageText").GetComponent<UIManager>().MessageText.text = "GameOver";
-        float startTime = Time.time;
-        while (Time.time - startTime < 3f) {}
-        GameObject.Find("RestartButton").SetActive(true);
+        MyUIManager.DisplayMessage("GameOver", 3f);
+        MyUIManager.RestartButton.SetActive(true);
         // -------------------- 
     }
 
@@ -70,7 +67,7 @@ public class GameManager : MonoBehaviour
         // point만큼 점수를 증가시키고 UI에 표시한다.
         // ---------- TODO ---------- 
         NowScore++;
-        GameObject.Find("ScoreText").GetComponent<UIManager>().MessageText.text = NowScore.ToString();
+        MyUIManager.DisplayScore(NowScore);
         // -------------------- 
     }
 
