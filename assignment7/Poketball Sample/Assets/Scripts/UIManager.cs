@@ -21,12 +21,8 @@ public class UIManager : MonoBehaviour
     {
         // NowCoroutine이 있다면 멈추고 새로운 DisplayTextCoroutine을 시작한다.
         // ---------- TODO ---------- 
-        if (NowCoroutine != null)
-        {
-            StopCoroutine(NowCoroutine);
-            NowCoroutine = null;
-            DisplayTextCoroutine(text, duration);
-        }
+        if (NowCoroutine != null) StopCoroutine(NowCoroutine);
+        NowCoroutine = StartCoroutine(DisplayTextCoroutine(text, duration));
         // -------------------- 
     }
 
@@ -36,6 +32,7 @@ public class UIManager : MonoBehaviour
         // ---------- TODO ---------- 
         MyText.text = text;
         yield return new WaitForSeconds(duration);
+        MyText.text = "";
         // -------------------- 
     }
 }

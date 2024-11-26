@@ -72,13 +72,13 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j <= i; j++)
             {
                 GameObject ball = Instantiate(BallPrefab, pos, StartRotation);
-                ball.name = index.ToString(); // 공 이름 설정
+                ball.name = index.ToString();
                 ball.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/ball_" + index.ToString());
                 index++;
-                pos.x += RowSpacing;
+                pos.x += (2 * BallRadius + RowSpacing);
             }
-            pos.z -= RowSpacing * Mathf.Sqrt(3) / 2;
-            pos.x = tmp_pos.x - (RowSpacing / 2);
+            pos.z -= (2 * BallRadius + RowSpacing) * Mathf.Sqrt(3) / 2;
+            pos.x = tmp_pos.x - ((2 * BallRadius + RowSpacing) / 2);
         }
         // -------------------- 
     }
@@ -114,9 +114,9 @@ public class GameManager : MonoBehaviour
         if (PlayerBall != null)
         {
             Rigidbody rb = PlayerBall.GetComponent<Rigidbody>();
-            Vector3 force = targetPos - PlayerBall.transform.position;
-            force.y = 0;
-            rb.AddForce(force.normalized * CalcPower(force), ForceMode.Impulse);
+            Vector3 displacement = targetPos - PlayerBall.transform.position;
+            displacement.y = 0;
+            rb.AddForce(displacement.normalized * CalcPower(displacement), ForceMode.Impulse);
         }
         // -------------------- 
     }
