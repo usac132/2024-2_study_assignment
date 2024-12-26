@@ -34,7 +34,8 @@ public class ClickHandler : MonoBehaviour
 
         if (!Utils.IsInBoard(boardPos)) return;
         Piece clickedPiece = gameManager.Pieces[boardPos.Item1, boardPos.Item2];
-        if (clickedPiece != null && clickedPiece.PlayerDirection == gameManager.CurrentTurn)
+        int tmp = clickedPiece.PlayerDirection == 1 ? 1 : 2;                        ///// 추가
+        if (clickedPiece != null && tmp == gameManager.CurrentTurn)                 // ?? -> tmp로 수정
         {
             selectedPiece = clickedPiece;
             isDragging = true;
@@ -68,7 +69,32 @@ public class ClickHandler : MonoBehaviour
             // 움직일 수 없다면 selectedPiece를 originalPosition으로 이동시킴
             // effect를 초기화
             // --- TODO ---
-            
+            if (gameManager.IsValidMove(selectedPiece, boardPos))
+            {
+                gameManager.Move(selectedPiece, boardPos);
+                if(gameManager.movementManager.IsInCheck((-1)*selectedPiece.PlayerDirection)) {
+                    bool IsCheckMate = true;
+                    for (int x = 0; x < Utils.FieldWidth; x++)
+                    {
+                        for (int y = 0; y < Utils.FieldHeight; y++)
+                        {
+                            var tmp_piece = gameManager.Pieces[x, y];
+
+                            if (tmp_piece != null && tmp_piece.PlayerDirection != selectedPiece.PlayerDirection && gameManager.movementManager.IsPossibleMovesEx(tmp_piece))
+                            {
+                                IsCheckMate = false;
+                            }
+                        }
+                    }
+                    if (IsCheckMate) gameManager.uiManager.ShowCheckmate(selectedPiece.PlayerDirection);
+                    else gameManager.uiManager.ShowCheck();
+                }
+            }
+            else
+            {
+                selectedPiece.transform.position = originalPosition;
+            }
+            gameManager.ClearEffects();
             // ------
             isDragging = false;
             selectedPiece = null;

@@ -22,7 +22,67 @@ public class MovementManager : MonoBehaviour
         // 보드에 있는지, 다른 piece에 의해 막히는지 등을 체크
         // 폰에 대한 예외 처리를 적용
         // --- TODO ---
-        
+        int x = piece.MyPos.Item1;
+        int y = piece.MyPos.Item2;
+        int dirX = moveInfo.dirX;
+        int dirY = moveInfo.dirY;
+
+        for (int i = 1; i <= moveInfo.distance; i++)
+        {
+            x += dirX;
+            y += dirY;
+
+            if (!Utils.IsInBoard((x, y)))
+                return false;
+
+            var obstaclePiece = gameManager.Pieces[x, y];
+
+            if ((x, y) != targetPos)
+            {
+                // 중간에 다른 말이 있으면 이동 불가
+                if (obstaclePiece != null)
+                    return false;
+            }
+            else
+            {
+                // 목표 위치에 대한 처리
+                if (piece is Pawn)
+                {
+                    int forwardDirection = (piece.PlayerDirection == 1) ? 1 : -1;
+                    int startRow = (piece.PlayerDirection == 1) ? 1 : Utils.FieldHeight - 2;
+
+                    if (dirX == 0 && dirY == forwardDirection)
+                    {
+                        // 앞이 비어 있어야 함
+
+                        if (obstaclePiece == null)
+                        {
+                            return true;
+                        }
+                            
+                    }
+
+                    else if (Mathf.Abs(dirX) == 1 && dirY == forwardDirection)
+                    {
+                        // 대각선 이동, 상대 말이 있어야 함
+
+                        if (obstaclePiece != null && obstaclePiece.PlayerDirection != piece.PlayerDirection)
+                            return true;
+                    }
+
+                    return false;
+                }
+                else
+                {
+                    // 다른 기물
+                    if (obstaclePiece == null || obstaclePiece.PlayerDirection != piece.PlayerDirection)
+                        return true;
+                    else
+                        return false; 
+                }
+            }
+        }
+        return false;
         // ------
     }
 
@@ -44,7 +104,7 @@ public class MovementManager : MonoBehaviour
     public bool IsValidMove(Piece piece, (int, int) targetPos)
     {
         if (!IsValidMoveWithoutCheck(piece, targetPos)) return false;
-
+        
         // 체크 상태 검증을 위한 임시 이동
         var originalPiece = gameManager.Pieces[targetPos.Item1, targetPos.Item2];
         var originalPos = piece.MyPos;
@@ -64,7 +124,7 @@ public class MovementManager : MonoBehaviour
     }
 
     // 체크인지를 확인
-    private bool IsInCheck(int playerDirection)
+    public bool IsInCheck(int playerDirection)  // 수정 private -> public
     {
         (int, int) kingPos = (-1, -1); // 왕의 위치
         for (int x = 0; x < Utils.FieldWidth; x++)
@@ -84,10 +144,38 @@ public class MovementManager : MonoBehaviour
         // 왕이 지금 체크 상태인지를 리턴
         // gameManager.Pieces에서 Piece들을 참조하여 움직임을 확인
         // --- TODO ---
-        
+        for (int x = 0; x < Utils.FieldWidth; x++)
+        {
+            for (int y = 0; y < Utils.FieldHeight; y++)
+            {
+                var piece = gameManager.Pieces[x, y];
+                if (piece != null && piece.PlayerDirection != playerDirection)
+                {
+                    if (IsValidMoveWithoutCheck(piece, kingPos))
+                    {
+                        return true; // 체크 상태
+                    }
+                }
+            }
+        }
+        return false; // 체크 아님
         // ------
     }
-
+    public bool IsPossibleMovesEx(Piece piece)                   // 추가
+    {
+        for (int x = 0; x < Utils.FieldWidth; x++)
+        {
+            for (int y = 0; y < Utils.FieldHeight; y++)
+            {
+                (int, int) pos = (x, y);
+                if (IsValidMove(piece, pos))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public void ShowPossibleMoves(Piece piece)
     {
         ClearEffects();
@@ -97,7 +185,21 @@ public class MovementManager : MonoBehaviour
         // effectPrefab을 effectParent의 자식으로 생성하고 위치를 적절히 설정
         // currentEffects에 effectPrefab을 추가
         // --- TODO ---
-        
+        for (int x = 0; x < Utils.FieldWidth; x++)
+        {
+            for (int y = 0; y < Utils.FieldHeight; y++)
+            {
+                (int, int) pos = (x, y);
+                if (IsValidMove(piece, pos))
+                {
+                    GameObject effectObj = Instantiate(effectPrefab, effectParent);
+                    float effectX = Utils.ToRealPos(pos).x;
+                    float effectY = Utils.ToRealPos(pos).y;
+                    effectObj.transform.position = new Vector3(effectX, effectY, 0);
+                    currentEffects.Add(effectObj);
+                }
+            }
+        }
         // ------
     }
 

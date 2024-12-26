@@ -14,9 +14,9 @@ public class GameManager : MonoBehaviour
     private Transform PieceParent;
     private Transform EffectParent;
     
-    private MovementManager movementManager;
-    private UIManager uiManager;
-    
+    public MovementManager movementManager;         // private -> public 수정
+    public UIManager uiManager;                     // private -> public 수정
+
     public int CurrentTurn = 1; // 현재 턴 1 - 백, 2 - 흑
     public Tile[,] Tiles = new Tile[Utils.FieldWidth, Utils.FieldHeight];   // Tile들
     public Piece[,] Pieces = new Piece[Utils.FieldWidth, Utils.FieldHeight];    // Piece들
@@ -48,6 +48,13 @@ public class GameManager : MonoBehaviour
                 Tile tile = tileObj.GetComponent<Tile>();
                 tile.Set((x, y));
                 Tiles[x, y] = tile;
+
+                SpriteRenderer tileRenderer = tileObj.GetComponent<SpriteRenderer>();
+                if (tileRenderer != null)
+                {
+                    tileRenderer.sortingLayerName = "Tiles";      // Sorting Layer를 'Tiles'로 설정
+                    tileRenderer.sortingOrder = 0;               // Order in Layer를 낮게 설정
+                }
             }
         }
         // ------
@@ -86,8 +93,16 @@ public class GameManager : MonoBehaviour
         // --- TODO ---
         GameObject pieceObj = Instantiate(PiecePrefabs[pieceType], PieceParent);
         Piece piece = pieceObj.GetComponent<Piece>();
-        piece.initialize(pos, direction); // Assuming Piece has an Initialize method
+        piece.initialize(pos, direction);
         Pieces[pos.Item1, pos.Item2] = piece;
+
+        SpriteRenderer pieceRenderer = pieceObj.GetComponent<SpriteRenderer>();
+        if (pieceRenderer != null)
+        {
+            pieceRenderer.sortingLayerName = "Pieces";    // Sorting Layer를 'Pieces'로 설정
+            pieceRenderer.sortingOrder = 1;               // Order in Layer를 높게 설정
+        }
+
         return piece;
         // ------
     }
@@ -123,8 +138,9 @@ public class GameManager : MonoBehaviour
         }
 
         Pieces[piece.MyPos.Item1, piece.MyPos.Item2] = null;
-        piece.MoveTo(targetPos); 
+        piece.MoveTo(targetPos);
         Pieces[targetPos.Item1, targetPos.Item2] = piece;
+        ChangeTurn();
         // ------
     }
 
@@ -132,8 +148,8 @@ public class GameManager : MonoBehaviour
     {
         // 턴을 변경하고, UI에 표시
         // --- TODO ---
-        CurrentTurn = CurrentTurn == 1 ? 2 : 1;
-        uiManager.UpdateTurn(CurrentTurn); 
+        CurrentTurn = (CurrentTurn == 1) ? 2 : 1;
+        uiManager.UpdateTurn(CurrentTurn);
         // ------
     }
 }

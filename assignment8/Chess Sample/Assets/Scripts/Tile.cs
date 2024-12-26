@@ -21,7 +21,10 @@ public class Tile : MonoBehaviour
         // --- TODO ---
         MyPos = targetPos;
 
-        Vector3 worldPosition = new Vector3(targetPos.Item1, targetPos.Item2, 0);   // item위치 확인 필요
+        float x = Utils.ToRealPos(targetPos).x;
+        float y = Utils.ToRealPos(targetPos).y;
+
+        Vector3 worldPosition = new Vector3(x, y, 0);
         transform.position = worldPosition;
 
         if ((targetPos.Item1 + targetPos.Item2) % 2 == 0)
