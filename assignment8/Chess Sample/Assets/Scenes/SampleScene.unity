@@ -177,6 +177,8 @@ MonoBehaviour:
   - {fileID: 3203041552839337321, guid: 6cb09d8dedc510d44bb434cf5ff4c6da, type: 3}
   - {fileID: 3203041552839337321, guid: ba51a2229cbe15b489121d65bb7b7981, type: 3}
   EffectPrefab: {fileID: 8927482203315457769, guid: d2ad7805ad4f5944bb5e3d2b424d4c93, type: 3}
+  movementManager: {fileID: 0}
+  uiManager: {fileID: 0}
   CurrentTurn: 1
 --- !u!114 &391168257
 MonoBehaviour:
@@ -617,7 +619,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 532, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1969543826
@@ -642,10 +644,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 3
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0
